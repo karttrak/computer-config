@@ -1,0 +1,79 @@
+set tags=~/.tags
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set complete=.,w,b,u,t,i
+set nu
+set ruler
+autocmd BufWritePre *.java,*.js,*.css,*.scss,*.soy,*.jsp,*.py :%s/\s\+$//e
+autocmd BufRead,BufNewFile *.soy setlocal shiftwidth=2 tabstop=2
+autocmd BufRead,BufNewFile *.scss setlocal shiftwidth=2 tabstop=2
+autocmd BufRead,BufNewFile *.proto setlocal shiftwidth=2 tabstop=2
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+filetype plugin indent on
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2
+autocmd FileType python setlocal shiftwidth=2 tabstop=2
+autocmd FileType go setlocal noexpandtab
+set path+=/home/kevin/hg/alpha/Core,
+set path+=/home/kevin/hg/alpha/kernel,
+set path+=/home/kevin/hg/alpha/src,
+
+set guioptions-=m
+set guioptions-=T
+set guioptions-=r
+set guioptions-=L
+
+if has('mouse')
+  set mouse=a
+endif
+
+set pastetoggle=<f5>
+
+highlight OverLength ctermbg=darkred ctermfg=white guibg=#FFD9D9
+match OverLength /\%101v.\+/
+
+filetype on
+augroup vimrc_filetype
+ autocmd!
+ autocmd FileType c,java,javascript call s:MyCSettings()
+ autocmd FileType go call s:MyGoSettings()
+augroup end
+
+" Clear all comment markers (one rule for all languages)
+map _ :s/^\(\s*\)\/\/\\|^--\\|^> \\|^[#"%!;]/\1/<CR>:nohlsearch<CR>
+
+function! s:MyCSettings()
+  " Insert comments markers
+  map - :s/^/\/\//<CR>:nohlsearch<CR>
+endfunction
+function! s:MyGoSettings()
+  " Insert comments markers
+  map - :s/^\(\s*\)/\1\/\//<CR>:nohlsearch<CR>
+endfunction
+
+let g:CommandTMaxHeight=12
+let g:CommandTMaxFiles=40000
+set wildignore+=build,.hg,tmp,closure,depcache,flume,classes
+
+syntax enable
+colorscheme solarized
+set background=dark
+
+filetype off
+filetype plugin indent off
+set runtimepath+=/Users/kevin/go/misc/vim
+filetype plugin indent on
+syntax on
+
+" Close omni-completion selection window automatically
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+let g:gocode_gofmt_tabwidth = ' -tabwidth=' . &tabstop
+let g:gofmt_command = "goimports"
+let g:godef_split = 0
+
+let g:SuperTabDefaultCompletionType = "context"
+
