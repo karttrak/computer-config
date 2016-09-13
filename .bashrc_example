@@ -1,7 +1,8 @@
+alias reload="source ~/.bash_profile"
+
+# Yext
 alias rgrep='grep -r --color=auto -I --exclude-dir=build --exclude-dir=bin --exclude-dir=depcache --exclude-dir="*apache*" --exclude-dir=closure --exclude-dir=flume --exclude-dir="hadoop-0.*" --exclude-dir="jetty-distribution*" --exclude-dir=classes --exclude-dir=".git" --exclude="*.pyc"'
-alias chrome="open -a 'Google Chrome'"
-alias showFiles="defaults write com.apple.finder AppleShowAllFiles YES"
-alias hideFiles="defaults write com.apple.finder AppleShowAllFiles NO"
+alias khan-deploy="./tools/khan/deploy"
 alias nbbinst="npm install && bower install && bundle install"
 alias gs="grunt serve"
 alias gsd="grunt serve:dist"
@@ -11,8 +12,17 @@ alias gp="grunt pulldata"
 alias gpc="grunt pulldata && git add desktop.* && git commit -m 'pull data'"
 alias pr="open https://github.com/pulls?user=yext-pages"
 alias gpr="git pages -pr"
-alias reload="source ~/.bash_profile"
-alias deals="open http://www.everbuying.net/new-products.html && open http://smile.amazon.com/gp/goldbox && open http://www.slickdeals.net && open http://www.woot.com && open http://www.meh.com"
-alias khan-deploy="./tools/khan/deploy"
-alias vi="mvim"
-alias vim="mvim -v"
+alias alpha-update="pushd $ALPHA; git up; pushd gocode/src/yext; glock sync yext && make protos && make install; popd; popd;"
+
+# Functions
+function adminpages() {
+  open https://www.yext.com/pagesadmin/?query=$1
+}
+
+function gitpages() {
+  open https://github.com/yext-pages?query=$1
+}
+
+function update-build-branch() {
+  git co ${1-develop} && git br -D build; git co -b build && gbc && git push -f
+}
