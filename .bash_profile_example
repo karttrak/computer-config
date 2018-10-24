@@ -3,6 +3,12 @@ ulimit -n 65536 65536
 source ~/.profile
 source ~/.bashrc
 
-# MacPorts Installer addition on 2015-09-09_at_08:45:25: adding an appropriate PATH variable for use with MacPorts.
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-# Finished adapting your PATH environment variable for use with MacPorts.
+# Git bash completion
+test -f ~/.git-completion.bash && . $_
+
+# Run memcached if it is not already running
+if ! pgrep -x "memcached" > /dev/null
+then
+    memcached -d
+    memcached -d -p 11212
+fi

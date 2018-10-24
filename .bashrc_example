@@ -1,28 +1,50 @@
 alias reload="source ~/.bash_profile"
-
-# Yext
+alias showProcess="ps aux | grep -v grep | grep"
+alias showOpenPorts="lsof -PiTCP -sTCP:LISTEN"
+alias grepOpenPort="lsof -PiTCP -sTCP:LISTEN | grep"
+alias removeDsStore="find . -name '.DS_Store' -type f -delete"
 alias rgrep='grep -r --color=auto -I --exclude-dir=build --exclude-dir=bin --exclude-dir=depcache --exclude-dir="*apache*" --exclude-dir=closure --exclude-dir=flume --exclude-dir="hadoop-0.*" --exclude-dir="jetty-distribution*" --exclude-dir=classes --exclude-dir=".git" --exclude="*.pyc"'
-alias khan-deploy="./tools/khan/deploy"
-alias nbbinst="npm install && bower install && bundle install"
-alias gs="grunt serve"
-alias gsd="grunt serve:dist"
-alias gb="grunt build"
-alias gbc="grunt build && git aa && git cm 'build'"
-alias gp="grunt pulldata"
-alias gpc="grunt pulldata && git add desktop.* && git commit -m 'pull data'"
-alias pr="open https://github.com/pulls?user=yext-pages"
-alias gpr="git pages -pr"
-alias alpha-update="pushd $ALPHA; git up; pushd gocode/src/yext; glock sync yext && make protos && make install; popd; popd;"
 
-# Functions
-function adminpages() {
-  open https://www.yext.com/pagesadmin/?query=$1
-}
+# Fundrise
+alias flushMemcached="echo flush_all | nc localhost 11211; echo flush_all | nc localhost 11212"
+alias showProcessesFundrise="showProcess 'memcache\|Dynamo'"
+alias apiServicesRun="pushd $API_SERVICES && java -Dspring.profiles.active=api-docs -jar target/api-services.jar"
+alias swagger="open https://localhost:9090/swagger-ui.html"
 
-function gitpages() {
-  open https://github.com/yext-pages?query=$1
-}
+alias pr="python ~/.fundrise/tools/prtool.py"
 
-function update-build-branch() {
-  git co ${1-develop} && git br -D build; git co -b build && gbc && git push -f
-}
+# Building
+alias mavinstall="mvn3 clean install -Dmaven.test.skip=true"
+
+# Building and testing
+alias testMain="pushd $MAIN && mvn3 clean install -Pbuildshared && popd"
+alias testProject="mvn3 clean install -Pbuildshared"
+
+# Grunt
+alias guw="grunt update-watch"
+
+# Launch deployed
+alias launch="sh $TOMCAT_HOME/bin/catalina.sh run"
+
+# Database
+alias databaseReset="pushd $MAIN/fundrise-scripts && mvn3 exec:java@mysql; popd"
+
+# Generate filename for today's localhost log
+alias localhostFilename="echo localhost.`echo $(date +'%Y-%m-%d')`.log"
+
+# Open localhost log in VS Code
+alias codeLocalhost="code $TOMCAT_HOME/logs/`localhostFilename`"
+
+# Tail logs
+alias tailWeb="tail -f $TOMCAT_HOME/logs/catalina.out ~/logs/fundrise-web.log"
+alias tailAdmin="tail -f $TOMCAT_HOME/logs/catalina.out ~/logs/fundrise-admin.log"
+alias tailWebAdmin="tail -f $TOMCAT_HOME/logs/catalina.out ~/logs/fundrise-web.log ~/logs/fundrise-admin.log"
+alias tailLocalhost="tail -f $TOMCAT_HOME/logs/`localhostFilename`"
+
+# DynamoDB
+alias dynamoRun="cd ~/opt/dynamodb_local_latest/ && nohup $JAVA_HOME/bin/java -Xmx64m -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &"
+alias dynamoDrop="pushd $MAIN/fundrise-scripts; mvn3 exec:java@dynamodb; popd"
+
+if [ $TERM_PROGRAM = "iTerm.app" ]; then
+  osascript -e 'tell application "System Events" to keystroke "e" using {command down, shift down}'
+fi
